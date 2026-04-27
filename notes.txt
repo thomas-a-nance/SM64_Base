@@ -1,0 +1,3 @@
+Mario head lives img: textures/segment2/segment2.05A00.rgba16.png -> texture_hud_char_mario_head
+1up lives img: textures/segment2/1-up_mushroom.rgba16.png -> texture_hud_char_mushroom_1up
+Mario head camera img: textures/segment2/mario_cam.rgba16.png -> texture_hud_char_mario_head
