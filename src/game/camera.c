@@ -1712,6 +1712,7 @@ s32 update_behind_mario_camera(struct Camera *c, Vec3f focus, Vec3f pos) {
         camera_approach_s16_symmetric_bool(&sCSideButtonYaw, 0, 1);
         yawSpeed = 8;
     }
+
     if (sBehindMarioSoundTimer != 0) {
         goalPitch = 0;
         camera_approach_s16_symmetric_bool(&sBehindMarioSoundTimer, 0, 1);
@@ -2110,6 +2111,9 @@ s16 update_default_camera(struct Camera *c) {
                 }
             } else {
                 yawVel = nextYawVel;
+                if(sSelectionFlags & CAM_MODE_MARIO_ACTIVE){
+                    yawVel = 0; //Prevents camera from snapping behind Mario in Mario Cam
+                }
             }
         } else {
             if (nextYawVel == 0x1000) {
@@ -4707,6 +4711,7 @@ void handle_c_button_movement(struct Camera *c) {
             }
         }
     }
+
     if (c->mode != CAMERA_MODE_FIXED) {
         // Zoom out
         if (gPlayer1Controller->buttonPressed & D_CBUTTONS) {
@@ -4723,7 +4728,13 @@ void handle_c_button_movement(struct Camera *c) {
 
         // Rotate left or right
         cSideYaw = 0x1000;
-        if (gPlayer1Controller->buttonPressed & R_CBUTTONS) {
+        if(sSelectionFlags & CAM_MODE_MARIO_ACTIVE){
+            cSideYaw = DEGREES(5);
+        }
+        
+        //if (gPlayer1Controller->buttonPressed & R_CBUTTONS) {
+        if ((gPlayer1Controller->buttonDown & R_CBUTTONS && sSelectionFlags & CAM_MODE_MARIO_ACTIVE)
+            || (gPlayer1Controller->buttonPressed & R_CBUTTONS && !(sSelectionFlags & CAM_MODE_MARIO_ACTIVE))) {
             if (gCameraMovementFlags & CAM_MOVE_ROTATE_LEFT) {
                 gCameraMovementFlags &= ~CAM_MOVE_ROTATE_LEFT;
             } else {
@@ -4734,7 +4745,10 @@ void handle_c_button_movement(struct Camera *c) {
                 sCSideButtonYaw = -cSideYaw;
             }
         }
-        if (gPlayer1Controller->buttonPressed & L_CBUTTONS) {
+        
+        //if (gPlayer1Controller->buttonPressed & L_CBUTTONS) {
+        if ((gPlayer1Controller->buttonDown & L_CBUTTONS && sSelectionFlags & CAM_MODE_MARIO_ACTIVE)
+            || (gPlayer1Controller->buttonPressed & L_CBUTTONS && !(sSelectionFlags & CAM_MODE_MARIO_ACTIVE))) {
             if (gCameraMovementFlags & CAM_MOVE_ROTATE_RIGHT) {
                 gCameraMovementFlags &= ~CAM_MOVE_ROTATE_RIGHT;
             } else {
