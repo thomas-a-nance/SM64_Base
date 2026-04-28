@@ -4729,7 +4729,7 @@ void handle_c_button_movement(struct Camera *c) {
         // Rotate left or right
         cSideYaw = 0x1000;
         if(sSelectionFlags & CAM_MODE_MARIO_ACTIVE){
-            cSideYaw = DEGREES(5);
+            cSideYaw = DEGREES(2);
         }
         
         //if (gPlayer1Controller->buttonPressed & R_CBUTTONS) {
