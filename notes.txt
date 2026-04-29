@@ -4,3 +4,10 @@ Mario head camera img: textures/segment2/mario_cam.rgba16.png -> texture_hud_cha
 camera.c:
     handle_c_button_movement: cam movement
     sSelectionFlags & CAM_MODE_MARIO_ACTIVE => mario cam active
+
+ignore unused var warning:
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-variable"
+//code here
+#pragma GCC diagnostic pop

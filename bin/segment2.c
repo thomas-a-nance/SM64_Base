@@ -8,6 +8,7 @@
 #include "game/puppyprint.h"
 
 #include "make_const_nonconst.h"
+#include "config/config_hud.h"
 
 // SM64 (US/JP/EU/SH) Segment 02
 #ifdef PUPPYPRINT
@@ -410,6 +411,12 @@ ALIGNED8 static const Texture texture_hud_char_silver_coin[] = {
 #include "textures/segment2/segment2.silver_coin.rgba16.inc.c"
 };
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-variable"
+ALIGNED8 static const Texture texture_hud_char_mario_head[] = {
+#include "textures/segment2/segment2.05A00.rgba16.inc.c"
+};
+
 ALIGNED8 static const Texture texture_hud_char_mario_cam[] = {
 #include "textures/segment2/mario_cam.rgba16.inc.c"
 };
@@ -417,6 +424,7 @@ ALIGNED8 static const Texture texture_hud_char_mario_cam[] = {
 ALIGNED8 static const Texture texture_hud_char_mushroom_1up[] = {
 #include "textures/segment2/1-up_mushroom.rgba16.inc.c"
 };
+#pragma GCC diagnostic pop
 
 ALIGNED8 static const Texture texture_hud_char_star[] = {
 #include "textures/segment2/segment2.05C00.rgba16.inc.c"
@@ -2031,7 +2039,12 @@ const Texture *const main_hud_lut[] = {
     texture_hud_char_percent,                0x0,                0x0,                0x0,
                    0x0,                0x0,                0x0, texture_hud_char_minus,
     texture_hud_char_multiply, texture_hud_char_coin, texture_hud_char_red_coin, texture_hud_char_silver_coin,
-    texture_hud_char_mushroom_1up, texture_hud_char_star, texture_hud_char_decimal_point, texture_hud_char_beta_key,
+#if UNIVERSAL_CHARACTER_ICONS
+    texture_hud_char_mushroom_1up,
+#else
+    texture_hud_char_mario_head,
+#endif
+    texture_hud_char_star, texture_hud_char_decimal_point, texture_hud_char_beta_key,
     texture_hud_char_apostrophe, texture_hud_char_double_quote, texture_hud_char_umlaut
 };
 
@@ -2253,7 +2266,13 @@ const Texture *const main_credits_font_lut[] = {
 
 // HUD camera table 0x020087CC-0x020087E3
 const Texture *const main_hud_camera_lut[] = {
-    texture_hud_char_camera, texture_hud_char_mario_cam, texture_hud_char_lakitu, texture_hud_char_no_camera,
+    texture_hud_char_camera,
+#if UNIVERSAL_CHARACTER_ICONS
+    texture_hud_char_mario_cam,
+#else
+    texture_hud_char_mario_head,
+#endif
+    texture_hud_char_lakitu, texture_hud_char_no_camera,
     texture_hud_char_arrow_up, texture_hud_char_arrow_down,
 };
 
