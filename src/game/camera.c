@@ -2111,9 +2111,11 @@ s16 update_default_camera(struct Camera *c) {
                 }
             } else {
                 yawVel = nextYawVel;
+#if MARIO_CAM_SMOOTH
                 if(sSelectionFlags & CAM_MODE_MARIO_ACTIVE){
                     yawVel = 0; //Prevents camera from snapping behind Mario in Mario Cam
                 }
+#endif
             }
         } else {
             if (nextYawVel == 0x1000) {
@@ -4728,32 +4730,50 @@ void handle_c_button_movement(struct Camera *c) {
 
         // Rotate left or right
         cSideYaw = 0x1000;
+#if MARIO_CAM_SMOOTH
         if(sSelectionFlags & CAM_MODE_MARIO_ACTIVE){
             cSideYaw = DEGREES(2);
         }
-        
-        //if (gPlayer1Controller->buttonPressed & R_CBUTTONS) {
+#endif
+
+#if MARIO_CAM_SMOOTH
         if ((gPlayer1Controller->buttonDown & R_CBUTTONS && sSelectionFlags & CAM_MODE_MARIO_ACTIVE)
             || (gPlayer1Controller->buttonPressed & R_CBUTTONS && !(sSelectionFlags & CAM_MODE_MARIO_ACTIVE))) {
+#else
+        if (gPlayer1Controller->buttonPressed & R_CBUTTONS) {
+#endif
             if (gCameraMovementFlags & CAM_MOVE_ROTATE_LEFT) {
                 gCameraMovementFlags &= ~CAM_MOVE_ROTATE_LEFT;
             } else {
                 gCameraMovementFlags |= CAM_MOVE_ROTATE_RIGHT;
-                if (sCSideButtonYaw == 0) {
+
+                if (sCSideButtonYaw == 0
+#if MARIO_CAM_SMOOTH
+                     && !(sSelectionFlags & CAM_MODE_MARIO_ACTIVE)
+#endif
+                ) {
                     play_sound_cbutton_side();
                 }
+
                 sCSideButtonYaw = -cSideYaw;
             }
         }
-        
-        //if (gPlayer1Controller->buttonPressed & L_CBUTTONS) {
+
+#if MARIO_CAM_SMOOTH
         if ((gPlayer1Controller->buttonDown & L_CBUTTONS && sSelectionFlags & CAM_MODE_MARIO_ACTIVE)
             || (gPlayer1Controller->buttonPressed & L_CBUTTONS && !(sSelectionFlags & CAM_MODE_MARIO_ACTIVE))) {
+#else
+        if (gPlayer1Controller->buttonPressed & L_CBUTTONS) {
+#endif
             if (gCameraMovementFlags & CAM_MOVE_ROTATE_RIGHT) {
                 gCameraMovementFlags &= ~CAM_MOVE_ROTATE_RIGHT;
             } else {
                 gCameraMovementFlags |= CAM_MOVE_ROTATE_LEFT;
-                if (sCSideButtonYaw == 0) {
+                if (sCSideButtonYaw == 0
+#if MARIO_CAM_SMOOTH
+                     && !(sSelectionFlags & CAM_MODE_MARIO_ACTIVE)
+#endif
+                ) {
                     play_sound_cbutton_side();
                 }
                 sCSideButtonYaw = cSideYaw;

@@ -281,21 +281,6 @@ s32 sBreathMeterVisibleTimer = 0;
 static struct CameraHUD sCameraHUD = { CAM_STATUS_NONE };
 
 /**
- * Renders a rgba16 32x32 glyph texture from a table list.
- */
-void render_hud_large_tex_lut(s32 x, s32 y, Texture *texture) {
-    Gfx *tempGfxHead = gDisplayListHead;
-
-    gDPPipeSync(tempGfxHead++);
-    gDPSetTextureImage(tempGfxHead++, G_IM_FMT_RGBA, G_IM_SIZ_32b, 1, texture);
-    gSPDisplayList(tempGfxHead++, &dl_hud_img_load_tex_block);
-    gSPTextureRectangle(tempGfxHead++, x << 2, y << 2, (x + 15) << 2, (y + 15) << 2,
-                        G_TX_RENDERTILE, 0, 0, 4 << 10, 1 << 10);
-
-    gDisplayListHead = tempGfxHead;
-}
-
-/**
  * Renders a rgba16 16x16 glyph texture from a table list.
  */
 void render_hud_tex_lut(s32 x, s32 y, Texture *texture) {

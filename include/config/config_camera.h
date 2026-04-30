@@ -36,6 +36,11 @@
  */
 #define FAST_VERTICAL_CAMERA_MOVEMENT
 
+/** 
+ * Makes Mario Cam mode move the camera smoothly and prevents the camera from snapping behind Mario
+ */
+#define MARIO_CAM_SMOOTH          TRUE
+
 /**
  * Enables "parallel lakitu camera" or "aglab cam" which lets you move the camera smoothly with the D-pad.
  */
