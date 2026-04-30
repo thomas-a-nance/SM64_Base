@@ -1679,7 +1679,11 @@ s32 update_behind_mario_camera(struct Camera *c, Vec3f focus, Vec3f pos) {
 
     // Zoom in when Mario R_TRIG mode is active
     if (sSelectionFlags & CAM_MODE_MARIO_ACTIVE) {
-        maxDist = 350.f;
+#if MARIO_CAM_SMOOTH
+   maxDist = 800.f;
+#else
+    maxDist = 350.f;
+#endif
         focYOff = 120.f;
     }
     if (!(sMarioCamState->action & (ACT_FLAG_SWIMMING | ACT_FLAG_METAL_WATER))) {
@@ -1998,6 +2002,12 @@ s16 update_default_camera(struct Camera *c) {
     handle_c_button_movement(c);
     vec3f_get_dist_and_angle(sMarioCamState->pos, c->pos, &dist, &pitch, &yaw);
 
+#if MARIO_CAM_SMOOTH
+    if(sSelectionFlags & CAM_MODE_MARIO_ACTIVE){
+        yaw = c->yaw;
+    }
+#endif
+
     // If C-Down is active, determine what distance the camera should be from Mario
     if (gCameraMovementFlags & CAM_MOVE_ZOOMED_OUT) {
         //! In Mario mode, the camera is zoomed out further than in Lakitu mode (1400 vs 1200)
@@ -2141,6 +2151,7 @@ s16 update_default_camera(struct Camera *c) {
     if (avoidStatus == AVOID_STATUS_NONE && !(sStatusFlags & CAM_FLAG_COLLIDED_WITH_WALL)) {
         approach_f32_asymptotic_bool(&dist, zoomDist - 100.f, 0.05f);
     }
+
     vec3f_set_dist_and_angle(sMarioCamState->pos, cPos, dist, pitch, yaw);
     cPos[1] += posHeight + 125.f;
 
@@ -2292,7 +2303,7 @@ s16 update_default_camera(struct Camera *c) {
 void mode_default_camera(struct Camera *c) {
     set_fov_function(CAM_FOV_DEFAULT);
     c->nextYaw = update_default_camera(c);
-    pan_ahead_of_player(c);
+    pan_ahead_of_player(c); 
 }
 
 /**
@@ -2307,7 +2318,11 @@ void mode_lakitu_camera(struct Camera *c) {
  * When no other mode is active and the current R button mode is Mario
  */
 void mode_mario_camera(struct Camera *c) {
+#if MARIO_CAM_SMOOTH
+   gCameraZoomDist = 800.f;
+#else
     gCameraZoomDist = 350.f;
+#endif
     mode_default_camera(c);
 }
 

@@ -67,4 +67,4 @@
  * You will likely want this disabled in non-vanilla hacks.
  * Enabling this will automatically disable FORCED_CAMERA_MODE and USE_COURSE_DEFAULT_MODE.
  */
-// #define ENABLE_VANILLA_CAM_PROCESSING
+#define ENABLE_VANILLA_CAM_PROCESSING
